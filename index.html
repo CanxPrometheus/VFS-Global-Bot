@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFS GLOBAL VİZE RANDEVU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Oswald', sans-serif;
+            margin: 30px;
+            box-sizing: border-box;
+            background-color: #f8f9fa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .header {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: #333;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 4px;
+            background-color: #333;
+        }
+        .content {
+            display: flex;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .left, .right {
+            flex: 1;
+            margin: 0 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .section-header {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fa-eye, .fa-eye-slash {
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            position: relative;
+            margin-top: 5px;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group input[readonly] {
+            background-color: #f8f8f8;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .buttons button:hover {
+            background-color: #555;
+        }
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .logs-table th, .logs-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .logs-table th {
+            background-color: #f2f2f2;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">VFS GLOBAL VİZE RANDEVU</div>
+        <div class="content">
+            <div class="left">
+                <div class="section-header">
+                    <span>İşlem Oluşturma Alanı</span>
+                    <i class="fa fa-eye" id="toggle-info"></i>
+                </div>
+                <div id="customer-info">
+                    <div class="form-group">
+                        <label for="customer-select">Müşteri Seçin</label>
+                        <select id="customer-select" multiple>
+                        </select>
+                    </div>
+                    <div class="form-group" id="selected-customers">
+                        <label>Seçili Kişiler:</label>
+                        <!-- Dinamik olarak input alanları buraya eklenecek -->
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-select">Başvuru Merkezi</label>
+                        <select id="merkez">
+                            <option value="Gaziantep">Gaziantep</option>
+                            <option value="Ankara">Ankara</option>
+                            <option value="Istanbul" selected>Istanbul Beyoglu</option>
+                            <option value="Izmir">Izmir</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-select">Başvuru Kategorisi</label>
+                        <select id="kategori">
+                            <option value="Long Term">Long Term</option>
+                            <option value="OFII">OFII</option>
+                            <option value="Ticari">Ticari</option>
+                            <option value="Short" selected>Short</option>
+                            <option value="Student">Student</option>
+                            <option value="VIS">VIS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-select">Başvuru Alt Kategorisi</label>
+                        <input type="text" id="kategori2" placeholder="Boş bırakırsanız ilk çıkanı işaretleyecektir.">
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-select">Ödeme Bilgileri</label>
+                        <select id="paymentinfo">
+                            <option value=""></option>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button id="start-system">İşlem Oluştur</button>
+                    <a href="customers.html" style="text-decoration: none;">
+                        <button id="add-customer-btn">Müşterileri Yönet</button>
+                    </a>
+                </div>
+            </div>
+            <div class="right">
+                <div class="section-header">
+                    <span>İşlem Sırası (sıra en üsttekinde)</span>
+                </div>
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Müşteriler</th>
+                            <th>Başvuru Merkezi</th>
+                            <th>Başvuru Kategorisi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table-body">
+                        <tr>
+                            <th>1</th>
+                            <th>Mert Can Özçelik, Mert Baran, Fatih Biter</th>
+                            <th>Istanbul</th>
+                            <th>Short</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#toggle-info").click(function () {
+            $("#customer-info").toggle();
+            $(this).toggleClass("fa-eye fa-eye-slash");
+        });
+
+        window.electron.getUsers();
+        window.electron.getAllQueue();
+
+        window.electron.sendUserList((response) => {
+            if (!response.status) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'HATA!',
+                });
+            }
+            const customerSelect = $('#customer-select');
+            response.users.forEach(user => {
+                customerSelect.append(`<option value="${user.id}" data-name="${user.name} ${user.lastname}">${user.name} ${user.lastname}</option>`);
+            });
+        });
+
+
+        window.electron.getPaymentMethods();
+
+
+        
+        window.electron.sendPaymentMethods((response) => {
+            if (!response.status) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'HATA!',
+                });
+            }
+            const payinfooptions = $('#paymentinfo');
+            payinfooptions.empty();
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+                payinfooptions.append(`
+                    <option value="${index}">${element.card.number} | ${element.person.fullname}</option>
+                `)
+            }
+        });
+        
+        window.electron.sendQueueList((response) => {
+            if (!response.status) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'HATA!',
+                });
+            }
+            const tablebody = $('#logs-table-body');
+            tablebody.empty();
+
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+
+                // Kişilerin isim ve soyisimlerini birleştir
+                const personNames = element.persons.map(person => `${person.name} ${person.lastname}`).join(', ');
+
+                let html = `
+                    <tr>
+                        <th>${index + 1}</th>
+                        <th>${personNames}</th>
+                        <th>${element.details.basvurumerkezi}</th>
+                        <th>${element.details.basvurukategori}</th>
+                        <td>
+                            <i class="fas fa-trash delete-customer" onclick="window.electron.DeleteProcess('${element.id}')" title="Sil" style="cursor: pointer;"></i>
+                        </td>
+                    </tr>
+                `;
+                tablebody.append(html);
+            }
+        });
+
+
+        $('#start-system').click(function(){
+            var selectedOptions = $('#customer-select').find('option:selected');
+            var idsArray = [];
+
+            selectedOptions.each(function(index, option) {
+                var userId = $(option).val();
+                idsArray.push(userId);
+            });
+
+            const basvurumerkezi = $("#merkez").val();
+            const basvurukategori = $("#kategori").val()
+            const basvurualtkategori = $("#kategori2").val()
+            const paymentinfoindex = $('#paymentinfo').val();
+            
+            const data = JSON.stringify({
+                customerids: idsArray,
+                details: {basvurukategori: basvurukategori, basvurumerkezi: basvurumerkezi, basvurualtkategori: basvurualtkategori, paymentinfoindex: paymentinfoindex}
+            });
+            window.electron.CreateProcess(data);
+        });
+
+        $('#customer-select').change(function() {
+            var selectedOptions = $(this).find('option:selected'); 
+            var idsArray = [];
+
+
+            $('#selected-customers').empty();
+            $('#selected-customers').append('<label>Seçili Kişiler:</label>');
+
+
+            selectedOptions.each(function(index, option) {
+                var userId = $(option).val();
+                var userName = $(option).data('name');
+                var inputId = `customer-id-${userId}`;
+
+
+                $('#selected-customers').append(`<input type="text" id="${inputId}" disabled value="${userName}">`);
+
+
+                idsArray.push(userId);
+            });
+        });
+
+        window.electron.sendUserDatatoLeft((response) => {
+            if (!response.status) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'HATA!',
+                    text: response.message
+                });
+            }
+        })
+    })
+    </script>
+</body>
+</html>

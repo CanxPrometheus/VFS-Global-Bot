@@ -1,0 +1,27 @@
+{
+  "name": "vfs_vize_otomasyon_uygulama",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^31.2.1",
+    "imap": "^0.8.19",
+    "mailparser": "^3.7.1",
+    "mysql": "^2.18.1",
+    "node-capmonster": "^0.4.5",
+    "node-pop3": "^0.9.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "poplib": "^0.1.7",
+    "puppeteer": "^22.13.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-proxy": "^1.0.2",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}

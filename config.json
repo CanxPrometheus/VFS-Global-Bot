@@ -1,0 +1,50 @@
+{
+    "TELEGRAM": {
+        "BOT_TOKEN": "7289372866:AAEIVBN8fnufy83JMiTAXRZ0BqneG_xjek0",
+        "LOG_CHANNELS": {
+            "GENEL": "-1002147551440",
+            "SUCCESS": "-1002220251436"
+        }
+    },
+    "ODEME_BILGILERI": [
+        {
+            "card": {
+                "number": "4111111111111111",
+                "month": "12",
+                "year": "2025",
+                "cvv": "123"
+            },
+            "person": {
+                "fullname": "John Doe",
+                "address": "123 Main St, Anytown, USA",
+                "postalcode": "12345"
+            }
+        },
+        {
+            "card": {
+                "number": "5500000000000004",
+                "month": "06",
+                "year": "2024",
+                "cvv": "456"
+            },
+            "person": {
+                "fullname": "Jane Smith",
+                "address": "456 Elm St, Othertown, USA",
+                "postalcode": "67890"
+            }
+        },
+        {
+            "card": {
+                "number": "340000000000009",
+                "month": "09",
+                "year": "2023",
+                "cvv": "789"
+            },
+            "person": {
+                "fullname": "Alice Johnson",
+                "address": "789 Oak St, Sometown, USA",
+                "postalcode": "13579"
+            }
+        }
+    ]
+}
